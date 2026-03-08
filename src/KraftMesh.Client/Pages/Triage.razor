@@ -1,0 +1,90 @@
+@page "/triage"
+@inject IResourceService ResourceService
+
+<PageTitle>Triage - KraftMesh</PageTitle>
+
+<div class="triage-layout">
+    <div class="sync-status mb-3">
+        @if (ResourceService.IsOffline)
+        {
+            <span class="badge bg-secondary">Local Vault</span>
+            <span class="text-muted small ms-2">Showing cached data. Connect to KraftMesh.Api to sync.</span>
+        }
+        else
+        {
+            <span class="badge bg-success">Connected to KraftMesh.Api</span>
+        }
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h2 class="h5">Active Needs</h2>
+            <p class="text-muted small">Sorted by severity (Critical first)</p>
+            <ul class="list-group">
+                @foreach (var entry in ActiveNeeds)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div>
+                            <strong>@entry.Title</strong>
+                            <span class="badge bg-warning text-dark ms-2">@entry.Severity</span>
+                            <span class="badge bg-info ms-1">@entry.Category</span>
+                            @if (!string.IsNullOrWhiteSpace(entry.Description))
+                            {
+                                <div class="small text-muted mt-1">@entry.Description</div>
+                            }
+                        </div>
+                    </li>
+                }
+            </ul>
+            @if (ActiveNeeds.Count == 0)
+            {
+                <p class="text-muted small">No active needs.</p>
+            }
+        </div>
+        <div class="col-md-6">
+            <h2 class="h5">Available Haves</h2>
+            <ul class="list-group">
+                @foreach (var entry in AvailableHaves)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div>
+                            <strong>@entry.Title</strong>
+                            <span class="badge bg-info ms-2">@entry.Category</span>
+                            @if (!string.IsNullOrWhiteSpace(entry.Description))
+                            {
+                                <div class="small text-muted mt-1">@entry.Description</div>
+                            }
+                        </div>
+                    </li>
+                }
+            </ul>
+            @if (AvailableHaves.Count == 0)
+            {
+                <p class="text-muted small">No available haves.</p>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [PersistentState]
+    public List<ResourceEntry>? Resources { get; set; }
+
+    private List<ResourceEntry> ActiveNeeds => (Resources ?? new List<ResourceEntry>())
+        .Where(e => !e.IsHave)
+        .OrderByDescending(e => e.Severity)
+        .ToList();
+
+    private List<ResourceEntry> AvailableHaves => (Resources ?? new List<ResourceEntry>())
+        .Where(e => e.IsHave)
+        .OrderBy(e => e.CreatedAt)
+        .ToList();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Resources is null || Resources.Count == 0)
+        {
+            Resources = await ResourceService.GetResourcesAsync();
+        }
+    }
+}

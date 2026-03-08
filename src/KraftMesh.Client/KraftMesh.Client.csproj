@@ -5,6 +5,15 @@
     <Nullable>enable</Nullable>
     <RootNamespace>KraftMesh.Client</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="10.0.0" />
+    <PackageReference Include="Polly.Extensions.Http" Version="3.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KraftMesh.Core\KraftMesh.Core.csproj" />
+  </ItemGroup>
   <!-- ServiceDefaults is not referenced: Blazor WASM cannot reference Microsoft.AspNetCore.App.
        API base URL and resilience can be configured via appsettings or Aspire service discovery when running under AppHost. -->
 </Project>

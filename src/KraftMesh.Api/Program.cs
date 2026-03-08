@@ -1,7 +1,9 @@
 using KraftMesh.Core;
+using KraftMesh.Core.Entities;
 using KraftMesh.Infrastructure;
 using KraftMesh.Infrastructure.Interceptors;
 using KraftMesh.Infrastructure.Services;
+using KraftMesh.Api.Models;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,5 +27,28 @@ var app = builder.Build();
 app.MapDefaultEndpoints();
 
 app.MapGet("/", () => Results.Ok("KraftMesh.Api"));
+
+app.MapGet("/resources", async (AppDbContext db, CancellationToken ct) =>
+{
+    var list = await db.ResourceEntries.ToListAsync(ct);
+    return Results.Ok(list);
+});
+
+app.MapPost("/resources", async (CreateResourceRequest req, AppDbContext db, CancellationToken ct) =>
+{
+    var entry = new ResourceEntry
+    {
+        Id = Guid.NewGuid(),
+        IsHave = req.IsHave,
+        Category = req.Category,
+        Severity = req.Severity,
+        Title = req.Title ?? string.Empty,
+        Description = req.Description,
+        CreatedAt = DateTimeOffset.UtcNow
+    };
+    db.ResourceEntries.Add(entry);
+    await db.SaveChangesAsync(ct);
+    return Results.Created($"/resources/{entry.Id}", entry);
+});
 
 app.Run();
