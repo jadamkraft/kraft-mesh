@@ -1,7 +1,13 @@
+using Aspire.Hosting;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
+var sql = builder.AddSqlServer("sql").WithLifetime(ContainerLifetime.Persistent);
+var db = sql.AddDatabase("database");
+
 var api = builder.AddProject<Projects.KraftMesh_Api>("api")
-    .WithHttpHealthCheck("/health");
+    .WithHttpHealthCheck("/health")
+    .WithReference(db);
 
 builder.AddProject<Projects.KraftMesh_Client>("client")
     .WithExternalHttpEndpoints()

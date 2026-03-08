@@ -1,0 +1,34 @@
+# Dev container (app) + SQL Server 2025 sidecar for local development.
+# Optional: set MSSQL_SA_PASSWORD in .devcontainer/.env to override the default.
+services:
+  app:
+    image: mcr.microsoft.com/devcontainers/dotnet:10.0
+    volumes:
+      - ..:/workspaces/MeshPoint
+    depends_on:
+      sql:
+        condition: service_healthy
+    environment:
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:-DevContainerSql1!}
+      ConnectionStrings__DefaultConnection: "Server=sql,1433;Database=KraftMesh;User Id=sa;Password=${MSSQL_SA_PASSWORD:-DevContainerSql1!};TrustServerCertificate=True;"
+    command: sleep infinity
+    networks:
+      - default
+
+  sql:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:-DevContainerSql1!}
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -Q \"SELECT 1\" -b -o /dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    networks:
+      - default

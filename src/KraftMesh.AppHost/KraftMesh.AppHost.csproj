@@ -6,6 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.SqlServer" Version="10.0.0" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\KraftMesh.Api\KraftMesh.Api.csproj" />
     <ProjectReference Include="..\KraftMesh.Client\KraftMesh.Client.csproj" />
   </ItemGroup>

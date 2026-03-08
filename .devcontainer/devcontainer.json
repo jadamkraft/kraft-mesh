@@ -1,0 +1,36 @@
+{
+  "name": "KraftMesh (.NET 10 + Aspire)",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/MeshPoint",
+
+  "forwardPorts": [1433, "17000-17200"],
+  "portsAttributes": {
+    "1433": {
+      "label": "SQL Server",
+      "onAutoForward": "notify"
+    },
+    "17000": {
+      "label": "Aspire Dashboard",
+      "onAutoForward": "openBrowser"
+    },
+    "17000-17200": {
+      "label": "Aspire services",
+      "onAutoForward": "silent"
+    }
+  },
+
+  "postCreateCommand": "dotnet workload install aspire",
+  "postStartCommand": "dotnet workload list",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp",
+        "ms-dotnettools.csdevkit",
+        "ms-mssql.mssql",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  }
+}
