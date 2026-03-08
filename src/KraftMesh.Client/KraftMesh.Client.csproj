@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>KraftMesh.Client</RootNamespace>
+  </PropertyGroup>
+  <!-- ServiceDefaults is not referenced: Blazor WASM cannot reference Microsoft.AspNetCore.App.
+       API base URL and resilience can be configured via appsettings or Aspire service discovery when running under AppHost. -->
+</Project>

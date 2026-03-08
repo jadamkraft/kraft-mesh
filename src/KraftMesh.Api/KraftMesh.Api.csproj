@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>KraftMesh.Api</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KraftMesh.ServiceDefaults\KraftMesh.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\KraftMesh.Core\KraftMesh.Core.csproj" />
+  </ItemGroup>
+</Project>

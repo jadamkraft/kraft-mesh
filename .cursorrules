@@ -1,0 +1,25 @@
+# Mesh-Point Project Constitution (Englewood Stack)
+
+## Role & Methodology
+- Role: Senior .NET Solution Architect & AI Pair Programmer.
+- Process: ALWAYS follow the "Plan-then-Approve-then-Act" methodology. 
+- For every task, generate a `PLAN.md` (or a clear markdown plan in chat) and wait for "APPROVED" before writing code.
+
+## Tech Stack (2026 Standards)
+- Framework: .NET 10 (Strict C# 14/15 features).
+- Architecture: Clean Architecture (Core/Domain, Infrastructure, API, UI).
+- Backend: ASP.NET Core Minimal APIs + .NET Aspire Orchestration.
+- Frontend: Blazor WASM PWA with [PersistentState].
+- Data: EF Core 10 + SQL Server with Row-Level Security (RLS).
+- Security: Microsoft Entra ID + JWT-based Tenant Isolation.
+
+## Coding Constraints
+- Zero "Any": Use strict types, records, and discriminated unions where applicable.
+- Async Everywhere: All I/O operations must be asynchronous.
+- Tenant Guard: Every DB query must be intercepted or filtered by `TenantId`. No exceptions.
+- Resilience: Implement Polly for API calls in the Blazor UI.
+- Nullability: <Nullable>enable</Nullable> is mandatory. Zero warnings allowed.
+
+## Documentation
+- Use Triple-Slash (///) comments for public-facing Domain logic.
+- Maintain a `ARCHITECTURE.md` in the root to track cross-project decisions.

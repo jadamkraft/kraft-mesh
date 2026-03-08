@@ -1,0 +1,4 @@
+html, body { font-family: sans-serif; }
+.loading { padding: 1rem; }
+#blazor-error-ui { display: none; }
+#blazor-error-ui.visible { display: block; padding: 1rem; background: #f00; color: #fff; }

@@ -1,0 +1,8 @@
+{
+  "name": "KraftMesh",
+  "short_name": "KraftMesh",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fff",
+  "theme_color": "#512bd4"
+}
