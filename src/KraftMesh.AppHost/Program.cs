@@ -11,7 +11,6 @@ var api = builder.AddProject<Projects.KraftMesh_Api>("api")
 
 builder.AddProject<Projects.KraftMesh_Client>("client")
     .WithExternalHttpEndpoints()
-    .WithHttpHealthCheck("/health")
     .WithReference(api)
     .WaitFor(api);
 

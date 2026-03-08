@@ -4,19 +4,21 @@ using Microsoft.Extensions.Options;
 namespace KraftMesh.Infrastructure.Services;
 
 /// <summary>
-/// Scoped implementation of ITenantProvider. For Phase 2 returns a default tenant from config or a dev fallback.
+/// Scoped implementation of ITenantProvider. Resolves tenant from override (e.g. X-Tenant-Id or seed) first, then config.
 /// </summary>
 public sealed class TenantProvider : ITenantProvider
 {
-    private readonly Guid? _tenantId;
+    private readonly ITenantIdOverride _override;
+    private readonly Guid? _configTenantId;
 
-    public TenantProvider(IOptions<TenantOptions> options)
+    public TenantProvider(IOptions<TenantOptions> options, ITenantIdOverride overrideService)
     {
+        _override = overrideService;
         var opts = options.Value;
-        _tenantId = Guid.TryParse(opts.DefaultTenantId, out var id) ? id : null;
+        _configTenantId = Guid.TryParse(opts.DefaultTenantId, out var id) ? id : null;
     }
 
-    public Guid? TenantId => _tenantId;
+    public Guid? TenantId => _override.TenantId ?? _configTenantId;
 }
 
 /// <summary>

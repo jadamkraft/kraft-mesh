@@ -1,10 +1,19 @@
 @page "/triage"
 @inject IResourceService ResourceService
+@inject TenantState TenantState
+@implements IDisposable
 
 <PageTitle>Triage - KraftMesh</PageTitle>
 
 <div class="triage-layout">
     <div class="sync-status mb-3">
+        <label class="me-2">Neighborhood:</label>
+        <select class="form-select form-select-sm d-inline-block w-auto" value="@(TenantState.CurrentTenantId?.ToString() ?? "")" @onchange="HandleTenantChange">
+            @foreach (var n in TenantState.Neighborhoods)
+            {
+                <option value="@n.Id.ToString()">@n.Name</option>
+            }
+        </select>
         @if (ResourceService.IsOffline)
         {
             <span class="badge bg-secondary">Local Vault</span>
@@ -82,9 +91,20 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (Resources is null || Resources.Count == 0)
-        {
-            Resources = await ResourceService.GetResourcesAsync();
-        }
+        await TenantState.LoadNeighborhoodsAsync();
+        TenantState.OnChange += StateHasChanged;
+        Resources = await ResourceService.GetResourcesAsync();
     }
+
+    private async Task HandleTenantChange(ChangeEventArgs e)
+    {
+        var value = e.Value?.ToString();
+        if (string.IsNullOrEmpty(value) || !Guid.TryParse(value, out var tenantId))
+            return;
+        TenantState.SetTenant(tenantId);
+        Resources = await ResourceService.GetResourcesAsync();
+        StateHasChanged();
+    }
+
+    public void Dispose() => TenantState.OnChange -= StateHasChanged;
 }

@@ -15,10 +15,13 @@ var apiBaseUrl = builder.Configuration["ApiBaseUrl"]
     ?? builder.Configuration["services__api__http__0"]
     ?? builder.HostEnvironment.BaseAddress;
 
+builder.Services.AddScoped<TenantState>();
+builder.Services.AddScoped<TenantHeaderHandler>();
 builder.Services.AddHttpClient("KraftMesh.Api", client =>
 {
     client.BaseAddress = new Uri(apiBaseUrl.TrimEnd('/') + "/");
 })
+.AddHttpMessageHandler<TenantHeaderHandler>()
 .AddPolicyHandler(GetRetryPolicy());
 
 builder.Services.AddScoped<ILocalVaultStorage, LocalVaultStorage>();
